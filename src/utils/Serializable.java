@@ -12,7 +12,7 @@ public class Serializable {
             obj = ois.readObject();
             ois.close();
         } catch (Exception e) {
-            System.out.println("Errors File: " + e.getMessage());
+            System.out.println("Errors File: " + fileName);
         }
         return obj;
     }

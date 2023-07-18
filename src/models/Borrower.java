@@ -1,16 +1,35 @@
 package models;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class Borrower {
+public class Borrower implements Serializable {
     private int id;
     private int userId;
     private int bookId;
     private LocalDate borrowDate;
     private LocalDate expDate;
     private int quantity;
+    private BorrowerStatus borrowerStatus;
 
+    public Borrower(int id, int userId, int bookId, LocalDate borrowDate, LocalDate expDate, int quantity, BorrowerStatus borrowerStatus) {
+        this.id = id;
+        this.userId = userId;
+        this.bookId = bookId;
+        this.borrowDate = borrowDate;
+        this.expDate = expDate;
+        this.quantity = quantity;
+        this.borrowerStatus = borrowerStatus;
+    }
+
+    public BorrowerStatus getBorrowerStatus() {
+        return borrowerStatus;
+    }
+
+    public void setBorrowerStatus(BorrowerStatus borrowerStatus) {
+        this.borrowerStatus = borrowerStatus;
+    }
 
     public int getQuantity() {
         return quantity;
@@ -19,17 +38,6 @@ public class Borrower {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-    public Borrower(int id, int userId, int bookId, LocalDate borrowDate, LocalDate expDate, int quantity) {
-        this.id = id;
-        this.userId = userId;
-        this.bookId = bookId;
-        this.borrowDate = borrowDate;
-        this.expDate = expDate;
-        this.quantity = quantity;
-    }
-
-
 
     public Borrower() {
     }
@@ -76,7 +84,7 @@ public class Borrower {
 
     @Override
     public String toString() {
-        int var10000 = this.id;
-        return "" + var10000 + "," + this.userId + "," + this.bookId + "," + String.valueOf(this.borrowDate) + "," + String.valueOf(this.expDate) + "," + this.quantity;
+        return String.format("| %-7s | %-7s | %-13s | %-13s | %-8s | %-15s |",
+        userId ,bookId ,borrowDate, expDate, quantity ,borrowerStatus);
     }
 }

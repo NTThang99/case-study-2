@@ -1,10 +1,9 @@
 package models;
 
 public enum EPath {
-    BOOKS("data/books.dat"),
-    BORROWERS("data/borrowers.data");
-
-
+    BOOKS("data/books.data"),
+    BORROWERS("data/borrowers.data"),
+    USERS("data/users.data");
     private final String filePath;
 
     EPath(String filePath) {

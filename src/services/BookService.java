@@ -2,6 +2,7 @@ package services;
 
 import models.Book;
 import models.EPath;
+import models.Status;
 import utils.Serializable;
 
 
@@ -10,11 +11,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+
+
 public class BookService implements BasicCRUD<Book> {
+    List<Book> list = new ArrayList<>();
    public static List<Book> listBooks;
    static {
        listBooks = (List<Book>) Serializable.deserialize(EPath.BOOKS.getFilePath());
    }
+
    public BookService(){
    }
     public static void save() {
@@ -29,6 +34,26 @@ public class BookService implements BasicCRUD<Book> {
                 .orElse(null);
     }
 
+    public Book getBookDetail(long bookId) {
+        list = getAll();
+        for (Book book: list){
+            if (book.getId() == bookId){
+                return book;
+            }
+        }
+        return null;
+    }
+    public List<Book> getByBookName(String fullName) {
+        return listBooks
+                .stream()
+                .filter(b -> b.getFullName().contains(fullName))
+                .collect(Collectors.toList());
+    }
+public void add(Book newbook){
+       listBooks = getAll();
+       listBooks.add(newbook);
+       save();
+}
     @Override
     public List<Book> getAll() {
         return listBooks;
@@ -66,4 +91,21 @@ public class BookService implements BasicCRUD<Book> {
                 .orElse(null);
         return book != null;
     }
+    public boolean checkBookStatus(long bookId) {
+        list = getAll();
+        Book book = getBookDetail(bookId);
+        return book.getStatus() == Status.INSTOCK;
+    }
+
+    public void changeBookStatus(long bookId) {
+        list = getAll();
+        Book book = getBookDetail(bookId);
+        if(book.getQuantity() == 0){
+            if (book.getStatus() == Status.INSTOCK){
+                book.setStatus(Status.OUTOFSTOCK);
+            }
+        }
+        save();
+    }
+
 }

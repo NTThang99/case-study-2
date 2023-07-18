@@ -1,11 +1,10 @@
 package services;
 
-import models.Book;
-import models.Borrower;
-import models.EPath;
-import models.User;
+import models.*;
 import utils.Serializable;
+import views.CustomerView;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +12,15 @@ import java.util.Objects;
 
 public class BorrowerService implements BasicCRUD<Borrower> {
     public static List<Borrower> listBorrowers;
+    List<Book> listBooks = new ArrayList<>();
     BookService bookService = new BookService();
+    CustomerView customerView = new CustomerView();
 
     static {
         listBorrowers = (List<Borrower>) Serializable.deserialize(EPath.BORROWERS.getFilePath());
     }
+
+
     public List<Borrower> getBorrowers() {
         return listBorrowers;
 }
@@ -44,34 +47,46 @@ public class BorrowerService implements BasicCRUD<Borrower> {
         return null;
     }
 
-//    public void confirmReturnBook(int borrowerID) {
-//        Borrower borrower = findById(borrowerID);
-//        Book book = bookService.getByID(borrower.getBookId());
-//        book.setQuantity(book.getQuantity() + borrower.getQuantity());
-//        bookService.update(book);
-//        BookService.save();
-//        listBorrowers.remove(borrower);
-//        save();
-//    }
-
-    public void muonSach(int id, int userId, int bookId, int quantity ) {
-        Borrower borrower = listBorrowers.stream()
-                .filter( bor -> bor.getUserId() == userId && bor.getBookId() == bookId)
-                .findFirst().orElse(null);
-        if(borrower != null) {
-            borrower.setQuantity(borrower.getQuantity() + quantity);
-        } else {
-            listBorrowers.add( new Borrower(id, userId, bookId, LocalDate.now(), LocalDate.now().plusDays(7) , quantity ));
-        }
-        update(borrower);
+    public void confirmReturnBook(int borrowerID) {
+        Borrower borrower = findById(borrowerID);
+        Book book = bookService.getByID(borrower.getBookId());
+        book.setQuantity(book.getQuantity() + borrower.getQuantity());
+        bookService.update(book);
+        BookService.save();
+        listBorrowers.remove(borrower);
         save();
     }
 
-    public void traSach(int id, int userId, int bookId, int quantity)  {
+    public List<Borrower> displayBorrowerBook(User user) {
+        List<Borrower> listBorrowBookByUser = new ArrayList<>();
+        listBorrowers = getBorrowers();
+        int userId = user.getId();
+        for (Borrower borrower : listBorrowers) {
+            if (userId == borrower.getUserId()) {
+                listBorrowBookByUser.add(borrower);
+            }
+        }
+        return listBorrowBookByUser;
+    }
+//    public void muonSach(int userId, int bookId, int quantity ) {
+//        Borrower borrower = new Borrower();
+//        borrower.setUserId(LoginService.currentUser.getId());
+//        borrower.setQuantity(quantity);
+//        borrower.setBorrowerStatus(BorrowerStatus.BORRWED);
+//        borrower.setBorrowDate(LocalDate.now());
+//
+//        save();
+//    }
+
+
+        public void traSach( int userId, int bookId, int quantity) throws IOException {
         Borrower borrower = listBorrowers.stream().filter(bor -> bor.getUserId() == userId && bor.getBookId()==bookId).findFirst().orElse(null);
         if (borrower != null) {
-            if(borrower.getQuantity() - quantity <= 0) {
-                listBorrowers.remove(borrower);
+            if(borrower.getQuantity() - quantity == 0) {
+
+                borrower.setBorrowerStatus(BorrowerStatus.PAY);
+            } else if (borrower.getQuantity() - quantity < 0) {
+                CustomerView.selectCustomerView();
             } else {
                 borrower.setQuantity(borrower.getQuantity() - quantity);
                 update(borrower);
@@ -80,18 +95,35 @@ public class BorrowerService implements BasicCRUD<Borrower> {
         save();
     }
 
-//    public List<Borrower> displayBorrowers(User user) {
-//        List<Borrower> listBorrowersByUser = new ArrayList<>();
-//        listBorrowers = getBorrowers();
-//        int userId = user.getId();
-//        for (Borrower borrower : listBorrowers) {
-//            if (userId == borrower.getUserId()) {
-//                listBorrowersByUser.add(borrower);
-//            }
-//        }
-//        return listBorrowersByUser;
-//    }
+    public void borrowBook( int bookId, User user, int quantity) {
+        listBorrowers = getBorrowers();
+        listBooks = bookService.getAll();
+        LocalDate date = LocalDate.now();
+        if (bookService.getByID(bookId).getQuantity() <= quantity){
 
+        }
+        for (Book book : listBooks) {
+            if (bookId == book.getId()) {
+                book.setQuantity(book.getQuantity() - quantity);
+            }
+        }
+        Borrower borrower = new Borrower();
+        int id = 0;
+        if (listBorrowers.size() == 0) {
+            id = 1;
+        } else id = listBorrowers.get(listBorrowers.size() - 1).getId() + 1;
+        borrower.setId(id);
+        borrower.setBookId(bookId);
+        borrower.setUserId(user.getId());
+        borrower.setBorrowDate(date);
+        borrower.setQuantity(quantity);
+        borrower.setExpDate(date.plusDays(7));
+        borrower.setUserId(user.getId());
+        borrower.setBorrowerStatus(BorrowerStatus.BORRWED);
+        bookService.changeBookStatus(bookId);
+        listBorrowers.add(borrower);
+        save();
+    }
 
     @Override
     public Borrower getByID(int id) {
@@ -140,7 +172,35 @@ public class BorrowerService implements BasicCRUD<Borrower> {
                 .orElse(null);
         return borrower != null;
     }
+    public void print(){
+        for (Borrower borrower : listBorrowers){
+            System.out.println(borrower.toString());
+        }
+    }
 
+    public List<Borrower> showBorrowerNearTheExpired() {
+        List<Borrower> borrowerNearList = new ArrayList<>();
+        for (Borrower borrower: listBorrowers) {
+            if (borrower.getExpDate().minusDays(3).isBefore(LocalDate.now())) {
+                borrower.setBorrowerStatus(BorrowerStatus.BORRWED);
+                borrowerNearList.add(borrower);
+            }
+        }
+
+        return borrowerNearList;
+        }
+
+
+    public List<Borrower> showBorrowerTheExpired() {
+        List<Borrower> borrowerExpiredList = new ArrayList<>();
+        for (Borrower borrower: listBorrowers) {
+            if (borrower.getExpDate().isBefore(LocalDate.now())) {
+                borrower.setBorrowerStatus(BorrowerStatus.OUTOFDATE);
+                borrowerExpiredList.add(borrower);
+            }
+        }
+        return borrowerExpiredList;
+    }
 }
 
 

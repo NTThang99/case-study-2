@@ -1,6 +1,11 @@
 package models;
 
-public class User {
+import services.UserService;
+
+import java.io.Serializable;
+import java.util.Random;
+
+public class User implements Serializable {
     private int id;
     private String name;
 
@@ -21,18 +26,28 @@ public class User {
         this.userStatus = userStatus;
     }
 
+    public User(String name, String address, String phoneNumber, String password, Role role, UserStatus userStatus) {
+        this.id = UserService.listUsers.size()+1;
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.role = role;
+        this.userStatus = userStatus;
+    }
 
-
-    public User(int id, String name, String address, String phonenumber,String password, Role role, UserStatus userStatus) {
+    public User(int id, String name, String address, String phoneNumber, String password, Role role, UserStatus userStatus) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.phoneNumber = phonenumber;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.role = role;
         this.userStatus = userStatus;
 
     }
+
+
 
 
 
@@ -88,6 +103,7 @@ public class User {
 
     @Override
     public String toString() {
-        return this.getId() + "," + this.getName() + "," + this.getAddress() + "," + this.getPhonenumber() + "," + this.getPassword() + "," + this.getRole() + "," + this.getUserStatus() ;
+        return String.format("| %-7s | %-13s | %-15s | %-20s | %-10s | %-10s | %-15s |%n",
+       getId(),getName(),getAddress(),getPhonenumber(),"******" ,getRole() ,getUserStatus()) ;
     }
 }
