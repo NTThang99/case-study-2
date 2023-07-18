@@ -127,13 +127,13 @@ public class UserView {
 
     public static void showBorrowedBookList() {
         List<Borrower> borrowerList = borrowerService.getAll();
-        System.out.println("╔-------------------------------- LIST BORROWER  --------------------------------╗");
-        System.out.println(String.format("| %-7s | %-7s | %-13s | %-13s | %-8s | %-15s |",
-                "UserId" ,"BookId" ,"BorrowDate", "ExpDate", "Quantity" ,"BorrowerStatus"));
-        System.out.println("|---------*---------*---------------*---------------*----------*-----------------|");
+        System.out.println("╔-------------------------------- LIST BORROWER  -------------------------------------------╗");
+        System.out.println(String.format("| %-7s | %-7s | %-7s | %-13s | %-13s | %-8s | %-13s |",
+                "UserId","BorrwerID" ,"BookId" ,"BorrowDate", "ExpDate", "Quantity" ,"BorrowerStatus"));
+        System.out.println("|---------*--------*---------*---------------*---------------*----------*------------------|");
         for (Borrower borrower : borrowerList) {
             System.out.println(borrower.toString());
-            System.out.println("╚---------*---------*---------------*---------------*----------*-----------------╝");
+            System.out.println("╚---------*--------*---------*---------------*---------------*----------*------------------╝");
         }
     }
 
@@ -141,13 +141,15 @@ public class UserView {
         showBorrowedBookList();
         try {
             System.out.println("Enter Borrowed Book ID:");
-            int id = scanner.nextInt();
+            int id = Integer.parseInt(scanner.nextLine());
             borrowerService.confirmReturnBook(id);
             System.out.println("Successful!!");
 
         } catch (NumberFormatException e) {
             System.out.println("Please Enter a Number!");
             confirmReturnBook();
+        } catch (InputMismatchException inputMismatchException) {
+            System.out.println(inputMismatchException);
         }
     }
 
@@ -167,16 +169,16 @@ public class UserView {
 //    }
 
     public static void showBorrowerTheExpired() {
-        System.out.println("╔------------------------ LIST BORROWER  THE EXPIRED ----------------------------╗");
-        String str = String.format("| %-7s | %-7s | %-13s | %-13s | %-8s | %-15s |",
-                "Id", "Book Id", "BorrowDate", "ExpDate", "Quantity", "Borrower Status");
+        System.out.println("╔------------------------ LIST BORROWER  THE EXPIRED --------------------------------------╗");
+        String str = String.format("| %-7s | %-7s | %-7s | %-13s | %-13s | %-8s | %-13s |",
+                "UserId","BorrwerID" ,"BookId" ,"BorrowDate", "ExpDate", "Quantity" ,"BorrowerStatus");
         System.out.println(str);
-        System.out.println("|---------*---------*---------------*---------------*----------*-----------------|");
+        System.out.println("|---------*--------*---------*---------------*---------------*----------*------------------|");
         List<Borrower> borrowerNearList = borrowerService.showBorrowerTheExpired();
         for (Borrower bor: borrowerNearList
         ) {
             System.out.println(bor.toString());
-            System.out.println("╚---------*---------*---------------*---------------*----------*-----------------╝");
+            System.out.println("╚---------*--------*---------*---------------*---------------*----------*------------------|╝");
         }
     }
 }

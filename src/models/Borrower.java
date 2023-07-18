@@ -84,7 +84,7 @@ public class Borrower implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("| %-7s | %-7s | %-13s | %-13s | %-8s | %-15s |",
-        userId ,bookId ,borrowDate, expDate, quantity ,borrowerStatus);
+        return String.format("| %-7s | %-7s| %-7s | %-13s | %-13s | %-8s | %-15s |",
+        userId ,this.id ,bookId ,borrowDate, expDate, quantity ,borrowerStatus);
     }
 }

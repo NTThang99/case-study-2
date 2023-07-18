@@ -1,9 +1,6 @@
 package views;
 
-import models.Role;
-import models.Status;
-import models.User;
-import models.UserStatus;
+import models.*;
 import services.AuthService.LoginService;
 import services.AuthService.RegisterService;
 import services.UserService;
@@ -33,8 +30,10 @@ public class LoginView {
         System.out.println("-------- REGISTER -------");
         String name = validateName(AppUtils.getString("Enter Name"));
         String address = AppUtils.getString("Enter Address");
-        String phoneNumber = validatePhone(AppUtils.getString("Enter Phone number"));
-        String password = AppUtils.getString("Enter Password");
+        String phoneNumber;
+        phoneNumber = AppUtils.getStringWithPattern(EPattern.PHONE_PATTERN);
+
+        String password = AppUtils.getStringWithPattern(EPattern.PASSWORD_PATTERN);
         User user = new User( name, address, phoneNumber, password, Role.CUSTOMER, UserStatus.ALLOW);
         if (RegisterService.register(user)) {
             System.out.println("Register successful!!");
@@ -59,13 +58,13 @@ public class LoginView {
         return value;
     }
 
-    static String validatePhone(String value){
-        if(!value.matches("[0-9]+")) {
-            System.out.println("Phone number is Invalid!!!");
-            value = AppUtils.getString("Enter Phone number:");
-            validatePhone(value);
-        }
-
-        return value;
-    }
+//    static String validatePhone(String value){
+//        if(!value.matches("[0-9]+")) {
+//            System.out.println("Phone number is Invalid!!!");
+//            value = AppUtils.getString("Enter Phone number:");
+//            validatePhone(value);
+//        }
+//
+//        return value;
+//    }
 }

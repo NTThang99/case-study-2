@@ -1,5 +1,7 @@
 package utils;
 
+import models.EPattern;
+
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -8,6 +10,7 @@ import java.util.regex.Pattern;
 public class AppUtils {
     private static Scanner sc;
     private static final String REGEX_NUMBER = "\\d+";
+    private static final String REGEX_PHONE = "^0\\d{9}$";
 
     static {
         sc = new Scanner(System.in);
@@ -34,6 +37,7 @@ public class AppUtils {
         }
     }
 
+
     public static int getInt(String str) {
         try {
             return Integer.parseInt(getString(str));
@@ -52,6 +56,7 @@ public class AppUtils {
             return false;
         }
     }
+
 
     public static int getIntWithBound(String str, int begin, int end) {
         try {
@@ -74,6 +79,15 @@ public class AppUtils {
             System.out.println("Invalid Date Format");
             return getDate(str);
         }
+    }
+
+    public static String getStringWithPattern(EPattern ePattern) {
+        String result = getString(ePattern.getMessage());
+        if (!Pattern.compile(ePattern.getPattern()).matcher(result).matches()) {
+            System.out.println(ePattern.getErrorMsg());
+            return getStringWithPattern(ePattern);
+        }
+        return result;
     }
 
 }

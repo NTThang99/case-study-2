@@ -51,9 +51,9 @@ public class Startup {
         Serializable.serialize(listUsers,EPath.USERS.getFilePath());
     }
     private static void initBorrower() {
-       Borrower borrower1 = new Borrower(2,1,1,LocalDate.of(2023, 7,1), LocalDate.of(2023,7,10),2,BorrowerStatus.PAY);
-        Borrower borrower2 = new Borrower(3,2,3,LocalDate.of(2023, 7,1), LocalDate.of(2023,7,16),4,BorrowerStatus.PAY);
-        Borrower borrower3 = new Borrower(4,3,4,LocalDate.of(2023, 7,10), LocalDate.now(),4,BorrowerStatus.PAY);
+       Borrower borrower1 = new Borrower(2,1,1,LocalDate.of(2023, 7,1), LocalDate.of(2023,7,8),2,BorrowerStatus.BORRWED);
+        Borrower borrower2 = new Borrower(3,2,3,LocalDate.of(2023, 7,9), LocalDate.of(2023,7,16),4,BorrowerStatus.BORRWED);
+        Borrower borrower3 = new Borrower(4,3,4,LocalDate.of(2023, 7,10), LocalDate.now(),4,BorrowerStatus.BORRWED);
 
         List<Borrower> listBorrowers = new ArrayList<>();
         listBorrowers.add(borrower1);
