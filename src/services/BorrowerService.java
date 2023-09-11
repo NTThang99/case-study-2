@@ -99,13 +99,15 @@ public class BorrowerService implements BasicCRUD<Borrower> {
         listBorrowers = getBorrowers();
         listBooks = bookService.getAll();
         LocalDate date = LocalDate.now();
-        if (bookService.getByID(bookId).getQuantity() <= quantity){
-
-        }
-        for (Book book : listBooks) {
-            if (bookId == book.getId()) {
-                book.setQuantity(book.getQuantity() - quantity);
+        if (bookService.getByID(bookId).getQuantity() < quantity){
+            System.out.println("Sach het roi!!!");
+        } else {
+            for (Book book : listBooks) {
+                if (bookId == book.getId()) {
+                    book.setQuantity(book.getQuantity() - quantity);
+                }
             }
+            System.out.println("Borrow books successfully!!");
         }
         Borrower borrower = new Borrower();
         int id = 0;
@@ -121,6 +123,13 @@ public class BorrowerService implements BasicCRUD<Borrower> {
         borrower.setUserId(user.getId());
         borrower.setBorrowerStatus(BorrowerStatus.BORRWED);
         bookService.changeBookStatus(bookId);
+        for (Borrower borrowed: listBorrowers) {
+            if (borrowed.getUserId() == borrower.getUserId() && borrowed.getBorrowDate().equals(borrower.getBorrowDate())){
+                borrowed.setQuantity(borrowed.getQuantity() + borrower.getQuantity());
+                save();
+                    return;
+                }
+            }
         listBorrowers.add(borrower);
         save();
     }

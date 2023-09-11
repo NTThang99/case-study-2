@@ -94,6 +94,7 @@ public void add(Book newbook){
     public boolean checkBookStatus(long bookId) {
         list = getAll();
         Book book = getBookDetail(bookId);
+
         return book.getStatus() == Status.INSTOCK;
     }
 

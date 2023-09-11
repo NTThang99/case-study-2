@@ -118,6 +118,7 @@ public class CustomerView {
         } while (true);
 
         if (!bookService.checkBookStatus(bookId)) {
+            System.out.println("...");
             selectCustomerView();
         }
 
@@ -130,7 +131,6 @@ public class CustomerView {
             System.out.println("Invalid number of borrowed books!!");
     } while (true);
         borrowerService.borrowBook(Integer.parseInt(String.valueOf(bookId)),LoginService.currentUser, Integer.parseInt(String.valueOf(quantity)));
-        System.out.println("Borrow books successfully!!");
     }
 
     public static void  displayBorrowerBook(){

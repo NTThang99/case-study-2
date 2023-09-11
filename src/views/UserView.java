@@ -35,9 +35,10 @@ public class UserView {
                 System.out.println("| 1. Show User Account                     |");
                 System.out.println("| 2. Show Borrowed Book List               |");
                 System.out.println("| 3. Confirm Return Borrowed Book          |");
-                System.out.println("| 4. Show Borrowed Expired                 |");
-                System.out.println("| 5. Show Revenue Of Day                   |");
-                System.out.println("| 6. Show Revenue Of Expired               |");
+                System.out.println("| 4. Show Borrower Near The Expired        |");
+                System.out.println("| 5. Show Borrowed Expired                 |");
+                System.out.println("| 6. Show Revenue Of Day                   |");
+                System.out.println("| 7. Show Revenue Of Expired               |");
                 System.out.println("| 0. Exit                                  |");
                 System.out.println("+------------------------------------------+");
 
@@ -46,10 +47,10 @@ public class UserView {
                     case 1 -> showUserAccount();
                     case 2 -> showBorrowedBookList();
                     case 3 -> confirmReturnBook();
-//                    case 4 -> showBorrowerNearTheExpired();
-                    case 4 -> showBorrowerTheExpired();
-                    case 5 -> showRevenueOfDay();
-                    case 6 -> showRevenueOfExpired();
+                    case 4 -> showBorrowerNearTheExpired();
+                    case 5 -> showBorrowerTheExpired();
+                    case 6 -> showRevenueOfDay();
+                    case 7 -> showRevenueOfExpired();
                     case 0 -> selectAdminView();
                 }
             }
@@ -140,7 +141,7 @@ public class UserView {
     public static void confirmReturnBook() {
         showBorrowedBookList();
         try {
-            System.out.println("Enter Borrowed Book ID:");
+            System.out.println("Enter Borrowed ID:");
             int id = Integer.parseInt(scanner.nextLine());
             borrowerService.confirmReturnBook(id);
             System.out.println("Successful!!");
@@ -153,20 +154,20 @@ public class UserView {
         }
     }
 
-//    public static void showBorrowerNearTheExpired() {
-//        System.out.println("╔------------------------ LIST BORROWER NEAR THE EXPIRED ------------------------╗");
-//        String str = String.format("| %-7s | %-7s | %-13s | %-13s | %-8s | %-15s |",
-//                "Id", "Book Id", "BorrowDate", "ExpDate", "Quantity", "Borrower Status");
-//
-//        System.out.println(str);
-//        System.out.println("|---------*---------*---------------*---------------*----------*-----------------|");
-//        List<Borrower> borrowerNearList = borrowerService.showBorrowerNearTheExpired();
-//        for (Borrower bor: borrowerNearList
-//             ) {
-//            System.out.println(bor.toString());
-//            System.out.println("╚---------*---------*---------------*---------------*----------*-----------------╝");
-//        }
-//    }
+    public static void showBorrowerNearTheExpired() {
+        System.out.println("╔------------------------ LIST BORROWER NEAR THE EXPIRED ------------------------╗");
+        String str = String.format("| %-7s | %-7s | %-13s | %-13s | %-8s | %-15s |",
+                "Id", "Book Id", "BorrowDate", "ExpDate", "Quantity", "Borrower Status");
+
+        System.out.println(str);
+        System.out.println("|---------*---------*---------------*---------------*----------*-----------------|");
+        List<Borrower> borrowerNearList = borrowerService.showBorrowerNearTheExpired();
+        for (Borrower bor: borrowerNearList
+             ) {
+            System.out.println(bor.toString());
+            System.out.println("╚---------*---------*---------------*---------------*----------*-----------------╝");
+        }
+    }
 
     public static void showBorrowerTheExpired() {
         System.out.println("╔------------------------ LIST BORROWER  THE EXPIRED --------------------------------------╗");
